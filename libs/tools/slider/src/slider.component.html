@@ -1,7 +1,7 @@
 <div class="tw-w-full tw-flex tw-bg-background-alt tw-flex-col tw-my-5 tw-p-4">
-  <input type="range" [min]="minValue" [max]="maxValue" value="0" id="rangeSlider" />
+  <input toolsSlider [min]="min" [max]="max" [step]="step" ngModel #rangeSlider />
   <div class="tw-w-full tw-flex tw-justify-between">
-    <span>{{ minValue }}</span>
-    <span>{{ maxValue }}</span>
+    <span *ngIf="min !== undefined" role="none" class="justify-self-start">{{ min }}</span>
+    <span *ngIf="max !== undefined" role="none" class="justify-self-end">{{ max }}</span>
   </div>
 </div>

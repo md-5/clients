@@ -1,1 +1,2 @@
-export { SliderComponent } from "./slider.component";
+export * from "./slider.component";
+export * from "./slider.directive";
