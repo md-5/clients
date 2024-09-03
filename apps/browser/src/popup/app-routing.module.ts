@@ -9,6 +9,8 @@ import {
   unauthGuardFn,
 } from "@bitwarden/angular/auth/guards";
 import { canAccessFeature } from "@bitwarden/angular/platform/guard/feature-flag.guard";
+import { generatorSwap } from "@bitwarden/angular/tools/generator/generator-swap";
+import { extensionRefreshSwap } from "@bitwarden/angular/utils/extension-refresh-swap";
 import {
   AnonLayoutWrapperComponent,
   AnonLayoutWrapperData,
@@ -50,6 +52,7 @@ import { PremiumV2Component } from "../billing/popup/settings/premium-v2.compone
 import { PremiumComponent } from "../billing/popup/settings/premium.component";
 import BrowserPopupUtils from "../platform/popup/browser-popup-utils";
 import { popupRouterCacheGuard } from "../platform/popup/view-cache/popup-router-cache.service";
+import { CredentialGeneratorComponent } from "../tools/popup/generator/credential-generator.component";
 import { GeneratorComponent } from "../tools/popup/generator/generator.component";
 import { PasswordGeneratorHistoryComponent } from "../tools/popup/generator/password-generator-history.component";
 import { SendAddEditComponent } from "../tools/popup/send/send-add-edit.component";
@@ -88,10 +91,11 @@ import { FolderAddEditComponent } from "../vault/popup/settings/folder-add-edit.
 import { FoldersV2Component } from "../vault/popup/settings/folders-v2.component";
 import { FoldersComponent } from "../vault/popup/settings/folders.component";
 import { SyncComponent } from "../vault/popup/settings/sync.component";
+import { TrashComponent } from "../vault/popup/settings/trash.component";
 import { VaultSettingsV2Component } from "../vault/popup/settings/vault-settings-v2.component";
 import { VaultSettingsComponent } from "../vault/popup/settings/vault-settings.component";
 
-import { extensionRefreshRedirect, extensionRefreshSwap } from "./extension-refresh-route-utils";
+import { extensionRefreshRedirect } from "./extension-refresh-route-utils";
 import { debounceNavigationGuard } from "./services/debounce-navigation.service";
 import { TabsV2Component } from "./tabs-v2.component";
 import { TabsComponent } from "./tabs.component";
@@ -471,12 +475,11 @@ const routes: Routes = [
         canDeactivate: [clearVaultStateGuard],
         data: { state: "tabs_vault" },
       }),
-      {
+      ...generatorSwap(GeneratorComponent, CredentialGeneratorComponent, {
         path: "generator",
-        component: GeneratorComponent,
         canActivate: [authGuard],
         data: { state: "tabs_generator" },
-      },
+      }),
       ...extensionRefreshSwap(SettingsComponent, SettingsV2Component, {
         path: "settings",
         canActivate: [authGuard],
@@ -493,6 +496,12 @@ const routes: Routes = [
     path: "account-switcher",
     component: AccountSwitcherComponent,
     data: { state: "account-switcher", doNotSaveUrl: true },
+  },
+  {
+    path: "trash",
+    component: TrashComponent,
+    canActivate: [authGuard],
+    data: { state: "trash" },
   },
 ];
 
