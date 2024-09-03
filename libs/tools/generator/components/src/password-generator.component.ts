@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output } from "@angular/core";
 import { BehaviorSubject, distinctUntilChanged, map, Subject, switchMap, takeUntil } from "rxjs";
 
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
@@ -21,6 +21,7 @@ export class PasswordGeneratorComponent implements OnInit, OnDestroy {
   constructor(
     private generatorService: CredentialGeneratorService,
     private accountService: AccountService,
+    private zone: NgZone,
   ) {}
 
   /** Binds the passphrase component to a specific user's settings.
@@ -75,8 +76,12 @@ export class PasswordGeneratorComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed),
       )
       .subscribe((generated) => {
-        this.onGenerated.next(generated);
-        this.value$.next(generated.credential);
+        // update subjects within the angular zone so that the
+        // template bindings refresh immediately
+        this.zone.run(() => {
+          this.onGenerated.next(generated);
+          this.value$.next(generated.credential);
+        });
       });
   }
 
