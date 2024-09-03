@@ -125,27 +125,6 @@ export class InlineMenuFieldQualificationService
     this.identityCompanyAutocompleteValue,
     this.identityPostalCodeAutocompleteValue,
   ]);
-  private identityFieldKeywords = [
-    ...new Set([
-      ...IdentityAutoFillConstants.TitleFieldNames,
-      ...IdentityAutoFillConstants.FullNameFieldNames,
-      ...IdentityAutoFillConstants.FirstnameFieldNames,
-      ...IdentityAutoFillConstants.MiddlenameFieldNames,
-      ...IdentityAutoFillConstants.LastnameFieldNames,
-      ...IdentityAutoFillConstants.AddressFieldNames,
-      ...IdentityAutoFillConstants.Address1FieldNames,
-      ...IdentityAutoFillConstants.Address2FieldNames,
-      ...IdentityAutoFillConstants.Address3FieldNames,
-      ...IdentityAutoFillConstants.PostalCodeFieldNames,
-      ...IdentityAutoFillConstants.CityFieldNames,
-      ...IdentityAutoFillConstants.StateFieldNames,
-      ...IdentityAutoFillConstants.CountryFieldNames,
-      ...IdentityAutoFillConstants.CompanyFieldNames,
-      ...IdentityAutoFillConstants.PhoneFieldNames,
-      ...IdentityAutoFillConstants.EmailFieldNames,
-      ...IdentityAutoFillConstants.UserNameFieldNames,
-    ]),
-  ];
   private inlineMenuFieldQualificationFlagSet = false;
 
   constructor() {
