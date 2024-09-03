@@ -122,6 +122,7 @@ export class InlineMenuFieldQualificationService
     ...this.identityAddressAutoCompleteValues,
     ...this.identityCountryAutocompleteValues,
     ...this.identityPhoneNumberAutocompleteValues,
+    this.identityCompanyAutocompleteValue,
     this.identityPostalCodeAutocompleteValue,
   ]);
   private identityFieldKeywords = [
@@ -288,14 +289,7 @@ export class InlineMenuFieldQualificationService
       return false;
     }
 
-    if (this.fieldContainsAutocompleteValues(field, this.identityAutocompleteValues)) {
-      return true;
-    }
-
-    return (
-      !this.fieldContainsAutocompleteValues(field, this.autocompleteDisabledValues) &&
-      this.keywordsFoundInFieldData(field, this.identityFieldKeywords, false)
-    );
+    return this.fieldContainsAutocompleteValues(field, this.identityAutocompleteValues);
   }
 
   /**
