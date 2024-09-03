@@ -373,10 +373,16 @@ export function throttle(callback: (_args: any) => any, limit: number) {
   };
 }
 
+/**
+ * Debounces a callback function to run after a delay of `delay` milliseconds.
+ *
+ * @param callback - The callback function to debounce.
+ * @param delay - The time in milliseconds to debounce the callback.
+ */
 export function debounce(callback: (_args: any) => any, delay: number) {
   let timeout: NodeJS.Timeout;
   return function (...args: unknown[]) {
-    clearTimeout(timeout);
+    globalThis.clearTimeout(timeout);
     timeout = globalThis.setTimeout(() => callback.apply(this, args), delay);
   };
 }
