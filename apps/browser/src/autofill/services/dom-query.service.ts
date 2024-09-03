@@ -9,7 +9,7 @@ export class DomQueryService implements DomQueryServiceInterface {
   private useTreeWalkerStrategyFlagSet = true;
 
   constructor() {
-    this.init();
+    void this.init();
   }
 
   /**
@@ -43,14 +43,13 @@ export class DomQueryService implements DomQueryServiceInterface {
   /**
    * Initializes the DomQueryService, checking for the presence of shadow DOM elements on the page.
    */
-  private init() {
-    void sendExtensionMessage("getUseTreeWalkerApiForPageDetailsCollectionFeatureFlag").then(
-      (useTreeWalkerStrategyFlag) => {
-        if (useTreeWalkerStrategyFlag && typeof useTreeWalkerStrategyFlag.result === "boolean") {
-          this.useTreeWalkerStrategyFlagSet = useTreeWalkerStrategyFlag.result;
-        }
-      },
+  private async init() {
+    const useTreeWalkerStrategyFlag = await sendExtensionMessage(
+      "getUseTreeWalkerApiForPageDetailsCollectionFeatureFlag",
     );
+    if (useTreeWalkerStrategyFlag && typeof useTreeWalkerStrategyFlag.result === "boolean") {
+      this.useTreeWalkerStrategyFlagSet = useTreeWalkerStrategyFlag.result;
+    }
 
     if (globalThis.document.readyState === "complete") {
       this.checkPageContainsShadowDom();
