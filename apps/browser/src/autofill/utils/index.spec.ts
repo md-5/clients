@@ -215,7 +215,7 @@ describe("setupAutofillInitDisconnectAction", () => {
 
 describe("debounce", () => {
   const debouncedFunction = jest.fn();
-  const debouncedMethod = debounce(debouncedFunction, 100);
+  const debounced = debounce(debouncedFunction, 100);
 
   beforeEach(() => {
     jest.useFakeTimers();
@@ -230,15 +230,15 @@ describe("debounce", () => {
   });
 
   it("does not call the method until the delay is complete", () => {
-    debouncedMethod();
+    debounced();
     jest.advanceTimersByTime(50);
     expect(debouncedFunction).not.toHaveBeenCalled();
   });
 
   it("calls the method a single time when the debounce is triggered multiple times", () => {
-    debouncedMethod();
-    debouncedMethod();
-    debouncedMethod();
+    debounced();
+    debounced();
+    debounced();
     jest.advanceTimersByTime(100);
 
     expect(debouncedFunction).toHaveBeenCalledTimes(1);
