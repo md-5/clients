@@ -1,25 +1,15 @@
 import { EVENTS, MAX_DEEP_QUERY_RECURSION_DEPTH } from "@bitwarden/common/autofill/constants";
 
-import { nodeIsElement } from "../utils";
+import { nodeIsElement, sendExtensionMessage } from "../utils";
 
 import { DomQueryService as DomQueryServiceInterface } from "./abstractions/dom-query.service";
 
 export class DomQueryService implements DomQueryServiceInterface {
   private pageContainsShadowDom: boolean;
-  // private useTreeWalkerStrategyFlagSet = true;
-  private useTreeWalkerStrategyFlagSet = false; // TODO REMOVE THIS AND UNCOMMENT THE ABOVE LINE
+  private useTreeWalkerStrategyFlagSet = true;
 
   constructor() {
-    // void sendExtensionMessage("getUseTreeWalkerApiForPageDetailsCollectionFeatureFlag").then(
-    //   (useTreeWalkerStrategyFlag) =>
-    //     (this.useTreeWalkerStrategyFlagSet = !!useTreeWalkerStrategyFlag?.result),
-    // );
-
-    if (globalThis.document.readyState === "complete") {
-      this.checkPageContainsShadowDom();
-    } else {
-      globalThis.addEventListener(EVENTS.LOAD, this.checkPageContainsShadowDom);
-    }
+    this.init();
   }
 
   /**
@@ -48,6 +38,39 @@ export class DomQueryService implements DomQueryServiceInterface {
     } catch {
       return this.queryAllTreeWalkerNodes<T>(root, treeWalkerFilter, mutationObserver);
     }
+  }
+
+  /**
+   * Initializes the DomQueryService, checking for the presence of shadow DOM elements on the page.
+   */
+  private init() {
+    void sendExtensionMessage("getUseTreeWalkerApiForPageDetailsCollectionFeatureFlag").then(
+      (useTreeWalkerStrategyFlag) => {
+        if (useTreeWalkerStrategyFlag && typeof useTreeWalkerStrategyFlag.result === "boolean") {
+          this.useTreeWalkerStrategyFlagSet = useTreeWalkerStrategyFlag.result;
+        }
+      },
+    );
+
+    if (globalThis.document.readyState === "complete") {
+      this.checkPageContainsShadowDom();
+      return;
+    }
+    globalThis.addEventListener(EVENTS.LOAD, this.checkPageContainsShadowDom);
+  }
+
+  /**
+   * Checks if the page contains any shadow DOM elements.
+   */
+  private checkPageContainsShadowDom = (): void => {
+    this.pageContainsShadowDom = this.queryShadowRoots(globalThis.document.body, true).length > 0;
+  };
+
+  /**
+   * Determines whether to use the treeWalker strategy for querying the DOM.
+   */
+  private shouldUseTreeWalkerStrategy(): boolean {
+    return this.useTreeWalkerStrategyFlagSet || this.pageContainsShadowDom;
   }
 
   /**
@@ -242,19 +265,5 @@ export class DomQueryService implements DomQueryServiceInterface {
 
       currentNode = treeWalker?.nextNode();
     }
-  }
-
-  /**
-   * Checks if the page contains any shadow DOM elements.
-   */
-  private checkPageContainsShadowDom = (): void => {
-    this.pageContainsShadowDom = this.queryShadowRoots(globalThis.document.body, true).length > 0;
-  };
-
-  /**
-   * Determines whether to use the treeWalker strategy for querying the DOM.
-   */
-  private shouldUseTreeWalkerStrategy(): boolean {
-    return this.useTreeWalkerStrategyFlagSet || this.pageContainsShadowDom;
   }
 }
