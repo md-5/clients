@@ -1,59 +1,18 @@
-import { importProvidersFrom } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { applicationConfig, Meta, moduleMetadata, StoryObj } from "@storybook/angular";
-
-import { JslibModule } from "@bitwarden/angular/jslib.module";
-import {
-  AvatarModule,
-  BadgeModule,
-  ButtonModule,
-  DialogModule,
-  FormFieldModule,
-  IconButtonModule,
-  TableModule,
-  TabsModule,
-} from "@bitwarden/components";
-
-import { PreloadedEnglishI18nModule } from "../../../../../core/tests";
+import { Meta, StoryObj } from "@storybook/angular";
 
 import { AccessSelectorComponent, PermissionMode } from "./access-selector.component";
 import { AccessItemType, AccessItemValue } from "./access-selector.models";
+import { default as baseComponentDefinition } from "./access-selector.stories";
 import { actionsData, itemsFactory } from "./storybook-utils";
-import { UserTypePipe } from "./user-type.pipe";
-
-type Story = StoryObj<AccessSelectorComponent & { initialValue: AccessItemValue[] }>;
 
 export default {
   title: "Web/Organizations/Access Selector/Dialog",
-  decorators: [
-    moduleMetadata({
-      declarations: [AccessSelectorComponent, UserTypePipe],
-      imports: [
-        DialogModule,
-        ButtonModule,
-        FormFieldModule,
-        AvatarModule,
-        BadgeModule,
-        ReactiveFormsModule,
-        FormsModule,
-        TabsModule,
-        TableModule,
-        JslibModule,
-        IconButtonModule,
-      ],
-      providers: [],
-    }),
-    applicationConfig({
-      providers: [importProvidersFrom(PreloadedEnglishI18nModule)],
-    }),
-  ],
-  parameters: {},
-  argTypes: {
-    formObj: { table: { disable: true } },
-  },
+  decorators: baseComponentDefinition.decorators,
 } as Meta;
 
-const DialogAccessSelectorRender = (args: any) => ({
+type Story = StoryObj<AccessSelectorComponent & { initialValue: AccessItemValue[] }>;
+
+const render: Story["render"] = (args) => ({
   props: {
     items: [],
     valueChanged: actionsData.onValueChanged,
@@ -108,5 +67,5 @@ export const Dialog: Story = {
     initialValue: [] as any[],
     items: dialogAccessItems,
   },
-  render: DialogAccessSelectorRender,
+  render,
 };

@@ -1,68 +1,25 @@
-import { importProvidersFrom } from "@angular/core";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from "@angular/forms";
-import { applicationConfig, Meta, moduleMetadata, StoryObj } from "@storybook/angular";
-
-import { JslibModule } from "@bitwarden/angular/jslib.module";
-import {
-  AvatarModule,
-  BadgeModule,
-  ButtonModule,
-  DialogModule,
-  FormFieldModule,
-  IconButtonModule,
-  TableModule,
-  TabsModule,
-} from "@bitwarden/components";
-
-import { PreloadedEnglishI18nModule } from "../../../../../core/tests";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { Meta, StoryObj } from "@storybook/angular";
 
 import { AccessSelectorComponent, PermissionMode } from "./access-selector.component";
 import { AccessItemType, AccessItemValue } from "./access-selector.models";
+import { default as baseComponentDefinition } from "./access-selector.stories";
 import { actionsData, itemsFactory } from "./storybook-utils";
-import { UserTypePipe } from "./user-type.pipe";
 
 export default {
   title: "Web/Organizations/Access Selector/Reactive form",
-  decorators: [
-    moduleMetadata({
-      declarations: [AccessSelectorComponent, UserTypePipe],
-      imports: [
-        DialogModule,
-        ButtonModule,
-        FormFieldModule,
-        AvatarModule,
-        BadgeModule,
-        ReactiveFormsModule,
-        FormsModule,
-        TabsModule,
-        TableModule,
-        JslibModule,
-        IconButtonModule,
-      ],
-      providers: [],
-    }),
-    applicationConfig({
-      providers: [importProvidersFrom(PreloadedEnglishI18nModule)],
-    }),
-  ],
-  parameters: {},
+  decorators: baseComponentDefinition.decorators,
   argTypes: {
     formObj: { table: { disable: true } },
   },
 } as Meta;
 
-// TODO: This is a workaround since this story does weird things.
 type FormObj = { formObj: FormGroup<{ formItems: FormControl<AccessItemValue[]> }> };
 type Story = StoryObj<AccessSelectorComponent & FormObj>;
+
 const fb = new FormBuilder();
 
-const ReactiveFormAccessSelectorRender = (args: any) => ({
+const render: Story["render"] = (args) => ({
   props: {
     items: [],
     onSubmit: actionsData.onSubmit,
@@ -100,5 +57,5 @@ export const ReactiveForm: Story = {
     emptySelectionText: "No members or groups added",
     items: sampleGroups.concat(sampleMembers),
   },
-  render: ReactiveFormAccessSelectorRender,
+  render,
 };

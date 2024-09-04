@@ -49,11 +49,7 @@ export default {
       providers: [importProvidersFrom(PreloadedEnglishI18nModule)],
     }),
   ],
-  parameters: {},
-  argTypes: {
-    formObj: { table: { disable: true } },
-  },
-} as Meta<typeof AccessSelectorComponent>;
+} as Meta;
 
 type Story = StoryObj<AccessSelectorComponent & { initialValue: AccessItemValue[] }>;
 
