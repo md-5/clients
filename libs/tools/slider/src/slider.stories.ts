@@ -28,8 +28,8 @@ type Story = StoryObj<SliderComponent>;
 
 export const Default: Story = {
   args: {
-    minValue: 0,
-    maxValue: 100,
+    min: 0,
+    max: 100,
   },
 
   render: (args) => {

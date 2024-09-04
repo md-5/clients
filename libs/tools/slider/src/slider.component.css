@@ -1,5 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  --thumb-size: 1rem;
   --color-bg: 255, 255, 255;
 }
 
@@ -9,7 +12,36 @@
   }
 }
 
+.tools-range-primary-700 {
+  --range-fill-color: rgb(var(--color-primary-700));
+}
+
+.tools-range-primary-600 {
+  --range-fill-color: rgb(var(--color-primary-600));
+}
+
+.tools-range-secondary-600 {
+  --range-fill-color: rgb(var(--color-secondary-600));
+}
+
+.tools-range-danger-600 {
+  --range-fill-color: rgb(var(--color-danger-600));
+}
+
+@property --range-fill-value {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 50%;
+}
+
+@property --range-fill-color {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(var(--color-primary-600));
+}
+
 input[type="range"] {
+  --thumb-size: 1rem;
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
@@ -17,10 +49,13 @@ input[type="range"] {
   outline: none;
   border-radius: var(--thumb-size);
   height: 6px;
-  background: rgb(var(--color-secondary-100));
+  background: linear-gradient(
+    to right,
+    var(--range-fill-color) var(--range-fill-value),
+    rgb(var(--color-secondary-100)) var(--range-fill-value)
+  );
 }
 
-/* Thumb: webkit */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -33,7 +68,6 @@ input[type="range"]::-webkit-slider-thumb {
   transition: 0.2s ease-in-out;
 }
 
-/* Thumb: Firefox */
 input[type="range"]::-moz-range-thumb {
   height: var(--thumb-size);
   width: var(--thumb-size);
@@ -43,8 +77,6 @@ input[type="range"]::-moz-range-thumb {
 
   transition: 0.2s ease-in-out;
 }
-
-/* Hover, active & focus Thumb: Webkit */
 
 input[type="range"]::-webkit-slider-thumb:hover {
   background-color: rgb(var(--color-primary-700));
@@ -58,8 +90,6 @@ input[type="range"]:focus::-webkit-slider-thumb {
     inset 0 0 0 0.75px rgb(var(--color-bg)),
     0 0 0 1.25px rgb(var(--color-primary-500));
 }
-
-/* Hover, active & focus Thumb: Firfox */
 
 input[type="range"]::-moz-range-thumb:hover {
   background-color: rgb(var(--color-primary-700));

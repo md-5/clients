@@ -28,7 +28,7 @@ export class ToolsSliderDirective {
     ].filter((s) => s != "");
   }
 
-  @HostBinding() @Input() id = `bit-slider-${nextId++}`;
+  @HostBinding() @Input() id = `tools-slider-${nextId++}`;
 
   @HostBinding("attr.aria-describedby") ariaDescribedBy: string;
 

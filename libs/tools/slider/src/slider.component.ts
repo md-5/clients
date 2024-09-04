@@ -22,7 +22,7 @@ import { ToolsSliderDirective } from "./slider.directive";
 export class SliderComponent implements AfterViewInit {
   @Input() min = 0;
   @Input() max: number;
-  @Input() step = 1;
+  @Input() step = 0.1;
 
   @ViewChild("rangeSlider", { static: true }) sliderEl: ElementRef<HTMLInputElement>;
 
@@ -30,7 +30,7 @@ export class SliderComponent implements AfterViewInit {
     this.sliderEl.nativeElement.addEventListener("input", (event: InputEvent) => {
       const tempValue = Number((event.target as HTMLInputElement).value);
       const progress = (tempValue / this.max) * 100;
-      this.sliderEl.nativeElement.style.background = `linear-gradient(to right, rgb(var(--color-primary-600)) ${progress}%, rgb(var(--color-secondary-100)) ${progress}%)`;
+      this.sliderEl.nativeElement.style.setProperty("--range-fill-value", `${progress}%`);
     });
   }
 }
