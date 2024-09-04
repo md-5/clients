@@ -25,7 +25,7 @@ import { UserTypePipe } from "./user-type.pipe";
 type Story = StoryObj<any>;
 
 export default {
-  title: "Web/Organizations/Access Selector",
+  title: "Web/Organizations/Access Selector/Dialog",
   decorators: [
     moduleMetadata({
       declarations: [AccessSelectorComponent, UserTypePipe],

@@ -22,7 +22,7 @@ import { actionsData, itemsFactory } from "./storybook-utils";
 import { UserTypePipe } from "./user-type.pipe";
 
 export default {
-  title: "Web/Organizations/Access Selector",
+  title: "Web/Organizations/Access Selector/Reactive form",
   decorators: [
     moduleMetadata({
       declarations: [AccessSelectorComponent, UserTypePipe],

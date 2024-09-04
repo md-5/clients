@@ -20,8 +20,8 @@ import {
 
 import { PreloadedEnglishI18nModule } from "../../../../../core/tests";
 
-import { AccessSelectorComponent } from "./access-selector.component";
-import { AccessItemType, CollectionPermission } from "./access-selector.models";
+import { AccessSelectorComponent, PermissionMode } from "./access-selector.component";
+import { AccessItemType, AccessItemValue, CollectionPermission } from "./access-selector.models";
 import { actionsData, itemsFactory } from "./storybook-utils";
 import { UserTypePipe } from "./user-type.pipe";
 
@@ -55,18 +55,14 @@ export default {
   },
 } as Meta;
 
-// TODO: This is a workaround since this story does weird things.
-type Story = StoryObj<any>;
+type Story = StoryObj<AccessSelectorComponent & { initialValue: AccessItemValue[] }>;
 
 const sampleMembers = itemsFactory(10, AccessItemType.Member);
 const sampleGroups = itemsFactory(6, AccessItemType.Group);
 
-// TODO: These renders are badly handled but storybook has made it more difficult to use multiple renders in a single story.
-const StandaloneAccessSelectorRender = (args: any) => ({
+const render: Story["render"] = (args) => ({
   props: {
-    items: [],
     valueChanged: actionsData.onValueChanged,
-    initialValue: [],
     ...args,
   },
   template: `
@@ -109,7 +105,7 @@ const memberCollectionAccessItems = itemsFactory(3, AccessItemType.Collection).c
 
 export const MemberCollectionAccess: Story = {
   args: {
-    permissionMode: "edit",
+    permissionMode: PermissionMode.Edit,
     showMemberRoles: false,
     showGroupColumn: true,
     columnHeader: "Collection",
@@ -120,19 +116,22 @@ export const MemberCollectionAccess: Story = {
     initialValue: [],
     items: memberCollectionAccessItems,
   },
-  render: StandaloneAccessSelectorRender,
+  render,
 };
 
 export const MemberGroupAccess: Story = {
   args: {
-    permissionMode: "readonly",
+    permissionMode: PermissionMode.Readonly,
     showMemberRoles: false,
     columnHeader: "Groups",
     selectorLabelText: "Select Groups",
     selectorHelpText: "Some helper text describing what this does",
     emptySelectionText: "No groups added",
     disabled: false,
-    initialValue: [{ id: "3g" }, { id: "0g" }],
+    initialValue: [
+      { id: "3g", type: AccessItemType.Group },
+      { id: "0g", type: AccessItemType.Group },
+    ],
     items: itemsFactory(4, AccessItemType.Group).concat([
       {
         id: "admin",
@@ -142,27 +141,30 @@ export const MemberGroupAccess: Story = {
       },
     ]),
   },
-  render: StandaloneAccessSelectorRender,
+  render,
 };
 
 export const GroupMembersAccess: Story = {
   args: {
-    permissionMode: "hidden",
+    permissionMode: PermissionMode.Hidden,
     showMemberRoles: true,
     columnHeader: "Members",
     selectorLabelText: "Select Members",
     selectorHelpText: "Some helper text describing what this does",
     emptySelectionText: "No members added",
     disabled: false,
-    initialValue: [{ id: "2m" }, { id: "0m" }],
+    initialValue: [
+      { id: "2m", type: AccessItemType.Member },
+      { id: "0m", type: AccessItemType.Member },
+    ],
     items: sampleMembers,
   },
-  render: StandaloneAccessSelectorRender,
+  render,
 };
 
 export const CollectionAccess: Story = {
   args: {
-    permissionMode: "edit",
+    permissionMode: PermissionMode.Edit,
     showMemberRoles: false,
     columnHeader: "Groups/Members",
     selectorLabelText: "Select groups and members",
@@ -171,8 +173,8 @@ export const CollectionAccess: Story = {
     emptySelectionText: "No members or groups added",
     disabled: false,
     initialValue: [
-      { id: "3g", permission: CollectionPermission.EditExceptPass },
-      { id: "0m", permission: CollectionPermission.View },
+      { id: "3g", type: AccessItemType.Group, permission: CollectionPermission.EditExceptPass },
+      { id: "0m", type: AccessItemType.Member, permission: CollectionPermission.View },
     ],
     items: sampleGroups.concat(sampleMembers).concat([
       {
@@ -194,5 +196,5 @@ export const CollectionAccess: Story = {
       },
     ]),
   },
-  render: StandaloneAccessSelectorRender,
+  render,
 };
