@@ -13,6 +13,10 @@ async function run(context) {
   console.log("## After pack");
   // console.log(context);
 
+  if (context.packager.platform.nodeName !== "darwin" || context.arch === builder.Arch.universal) {
+    await addElectronFuses(context);
+  }
+
   if (context.electronPlatformName === "linux") {
     console.log("Creating memory-protection wrapper script");
     const appOutDir = context.appOutDir;
@@ -26,10 +30,6 @@ async function run(context) {
     fse.copyFileSync(wrapperScript, wrapperBin);
     fse.chmodSync(wrapperBin, "755");
     console.log("Copied memory-protection wrapper script");
-  }
-
-  if (context.packager.platform.nodeName !== "darwin" || context.arch === builder.Arch.universal) {
-    await addElectronFuses(context);
   }
 
   if (["darwin", "mas"].includes(context.electronPlatformName)) {
