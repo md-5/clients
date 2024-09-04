@@ -4,10 +4,6 @@ import { applicationConfig, Meta, moduleMetadata, StoryObj } from "@storybook/an
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
 import {
-  OrganizationUserStatusType,
-  OrganizationUserType,
-} from "@bitwarden/common/admin-console/enums";
-import {
   AvatarModule,
   BadgeModule,
   ButtonModule,
@@ -87,7 +83,8 @@ const render: Story["render"] = (args) => ({
   `,
 });
 
-const memberCollectionAccessItems = itemsFactory(3, AccessItemType.Collection).concat([
+const memberCollectionAccessItems = itemsFactory(5, AccessItemType.Collection).concat([
+  // These represent collection access via a group
   {
     id: "c1-group1",
     type: AccessItemType.Collection,
@@ -108,11 +105,21 @@ const memberCollectionAccessItems = itemsFactory(3, AccessItemType.Collection).c
   },
 ]);
 
+// Simulate the current user not having permission to change access to this collection
+// TODO: currently the member dialog duplicates the AccessItemValue.permission on the
+// AccessItemView.readonlyPermission, this will be refactored to reduce this duplication:
+// https://bitwarden.atlassian.net/browse/PM-11590
+memberCollectionAccessItems[4].readonly = true;
+memberCollectionAccessItems[4].readonlyPermission = CollectionPermission.Manage;
+
 /**
  * Displays a member's collection access.
  *
- * This is currently used in the **Member dialog -> Collections tab**.
- * It is also used with similar inputs in the **Groups dialog -> Collections tab** to show a group's collection access.
+ * This is currently used in the **Member dialog -> Collections tab**. Note that it includes collection access that the
+ * member has via a group.
+ *
+ * This is also used in the **Groups dialog -> Collections tab** to show a group's collection access and in this
+ * case the Group column is hidden.
  */
 export const MemberCollectionAccess: Story = {
   args: {
@@ -124,7 +131,18 @@ export const MemberCollectionAccess: Story = {
     selectorHelpText: "Some helper text describing what this does",
     emptySelectionText: "No collections added",
     disabled: false,
-    initialValue: [],
+    initialValue: [
+      {
+        id: "4c",
+        type: AccessItemType.Collection,
+        permission: CollectionPermission.Manage,
+      },
+      {
+        id: "2c",
+        type: AccessItemType.Collection,
+        permission: CollectionPermission.Edit,
+      },
+    ],
     items: memberCollectionAccessItems,
   },
   render,
@@ -137,7 +155,7 @@ export const MemberCollectionAccess: Story = {
  */
 export const MemberGroupAccess: Story = {
   args: {
-    permissionMode: PermissionMode.Readonly,
+    permissionMode: PermissionMode.Hidden,
     showMemberRoles: false,
     columnHeader: "Groups",
     selectorLabelText: "Select Groups",
@@ -201,26 +219,36 @@ export const CollectionAccess: Story = {
     initialValue: [
       { id: "3g", type: AccessItemType.Group, permission: CollectionPermission.EditExceptPass },
       { id: "0m", type: AccessItemType.Member, permission: CollectionPermission.View },
+      { id: "7m", type: AccessItemType.Member, permission: CollectionPermission.Manage },
     ],
-    items: sampleGroups.concat(sampleMembers).concat([
-      {
-        id: "admin-group",
-        type: AccessItemType.Group,
-        listName: "Admin Group",
-        labelName: "Admin Group",
-        readonly: true,
-      },
-      {
-        id: "admin-member",
-        type: AccessItemType.Member,
-        listName: "Admin Member (admin@email.com)",
-        labelName: "Admin Member",
-        status: OrganizationUserStatusType.Confirmed,
-        role: OrganizationUserType.Admin,
-        email: "admin@email.com",
-        readonly: true,
-      },
-    ]),
+    items: sampleGroups.concat(sampleMembers),
+  },
+  render,
+};
+
+// TODO: currently the collection dialog duplicates the AccessItemValue.permission on the
+// AccessItemView.readonlyPermission, this will be refactored to reduce this duplication:
+// https://bitwarden.atlassian.net/browse/PM-11590
+const disabledMembers = itemsFactory(3, AccessItemType.Member);
+disabledMembers[1].readonlyPermission = CollectionPermission.Manage;
+disabledMembers[2].readonlyPermission = CollectionPermission.View;
+
+const disabledGroups = itemsFactory(2, AccessItemType.Group);
+disabledGroups[0].readonlyPermission = CollectionPermission.ViewExceptPass;
+
+/**
+ * Displays the members and groups assigned to a collection when the control is in a disabled state.
+ */
+export const DisabledCollectionAccess: Story = {
+  args: {
+    ...CollectionAccess.args,
+    disabled: true,
+    items: disabledGroups.concat(disabledMembers),
+    initialValue: [
+      { id: "1m", type: AccessItemType.Member, permission: CollectionPermission.Manage },
+      { id: "2m", type: AccessItemType.Member, permission: CollectionPermission.View },
+      { id: "0g", type: AccessItemType.Group, permission: CollectionPermission.ViewExceptPass },
+    ],
   },
   render,
 };
