@@ -1,7 +1,6 @@
 import { importProvidersFrom } from "@angular/core";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { applicationConfig, Meta, moduleMetadata, StoryObj } from "@storybook/angular";
-
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
 import {
@@ -196,44 +195,4 @@ export const CollectionAccess: Story = {
     ]),
   },
   render: StandaloneAccessSelectorRender,
-};
-
-const fb = new FormBuilder();
-
-const ReactiveFormAccessSelectorRender = (args: any) => ({
-  props: {
-    items: [],
-    onSubmit: actionsData.onSubmit,
-    ...args,
-  },
-  template: `
-    <form [formGroup]="formObj" (ngSubmit)="onSubmit(formObj.controls.formItems.value)">
-      <bit-access-selector
-        formControlName="formItems"
-        [items]="items"
-        [columnHeader]="columnHeader"
-        [selectorLabelText]="selectorLabelText"
-        [selectorHelpText]="selectorHelpText"
-        [emptySelectionText]="emptySelectionText"
-        [permissionMode]="permissionMode"
-        [showMemberRoles]="showMemberRoles"
-      ></bit-access-selector>
-      <button type="submit" bitButton buttonType="primary" class="tw-mt-5">Submit</button>
-    </form>
-`,
-});
-
-export const ReactiveForm: Story = {
-  args: {
-    formObj: fb.group({ formItems: [[{ id: "1g" }]] }),
-    permissionMode: "edit",
-    showMemberRoles: false,
-    columnHeader: "Groups/Members",
-    selectorLabelText: "Select groups and members",
-    selectorHelpText:
-      "Permissions set for a member will replace permissions set by that member's group",
-    emptySelectionText: "No members or groups added",
-    items: sampleGroups.concat(sampleMembers),
-  },
-  render: ReactiveFormAccessSelectorRender,
 };
