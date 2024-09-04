@@ -6,6 +6,9 @@ import { AccessItemType, AccessItemValue } from "./access-selector.models";
 import { default as baseComponentDefinition } from "./access-selector.stories";
 import { actionsData, itemsFactory } from "./storybook-utils";
 
+/**
+ * Displays the Access Selector embedded in a reactive form.
+ */
 export default {
   title: "Web/Organizations/Access Selector/Reactive form",
   decorators: baseComponentDefinition.decorators,

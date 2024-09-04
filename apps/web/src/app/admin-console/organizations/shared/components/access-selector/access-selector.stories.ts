@@ -25,6 +25,15 @@ import { AccessItemType, AccessItemValue, CollectionPermission } from "./access-
 import { actionsData, itemsFactory } from "./storybook-utils";
 import { UserTypePipe } from "./user-type.pipe";
 
+/**
+ * The Access Selector is used to view and edit:
+ * - member and group access to collections
+ * - members assigned to groups
+ *
+ * It is highly configurable in order to display these relationships from each perspective. For example, you can
+ * manage member-group relationships from the perspective of a particular member (showing all their groups) or a
+ * particular group (showing all its members).
+ */
 export default {
   title: "Web/Organizations/Access Selector",
   decorators: [
@@ -99,6 +108,12 @@ const memberCollectionAccessItems = itemsFactory(3, AccessItemType.Collection).c
   },
 ]);
 
+/**
+ * Displays a member's collection access.
+ *
+ * This is currently used in the **Member dialog -> Collections tab**.
+ * It is also used with similar inputs in the **Groups dialog -> Collections tab** to show a group's collection access.
+ */
 export const MemberCollectionAccess: Story = {
   args: {
     permissionMode: PermissionMode.Edit,
@@ -115,6 +130,11 @@ export const MemberCollectionAccess: Story = {
   render,
 };
 
+/**
+ * Displays the groups a member is assigned to.
+ *
+ * This is currently used in the **Member dialog -> Groups tab**.
+ */
 export const MemberGroupAccess: Story = {
   args: {
     permissionMode: PermissionMode.Readonly,
@@ -140,6 +160,11 @@ export const MemberGroupAccess: Story = {
   render,
 };
 
+/**
+ * Displays the members assigned to a group.
+ *
+ * This is currently used in the **Group dialog -> Members tab**.
+ */
 export const GroupMembersAccess: Story = {
   args: {
     permissionMode: PermissionMode.Hidden,
@@ -158,6 +183,11 @@ export const GroupMembersAccess: Story = {
   render,
 };
 
+/**
+ * Displays the members and groups assigned to a collection.
+ *
+ * This is currently used in the **Collection dialog -> Access tab**.
+ */
 export const CollectionAccess: Story = {
   args: {
     permissionMode: PermissionMode.Edit,

@@ -5,6 +5,9 @@ import { AccessItemType, AccessItemValue } from "./access-selector.models";
 import { default as baseComponentDefinition } from "./access-selector.stories";
 import { actionsData, itemsFactory } from "./storybook-utils";
 
+/**
+ * Displays the Access Selector in a dialog.
+ */
 export default {
   title: "Web/Organizations/Access Selector/Dialog",
   decorators: baseComponentDefinition.decorators,
