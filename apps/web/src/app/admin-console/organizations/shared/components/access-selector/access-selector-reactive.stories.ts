@@ -1,5 +1,11 @@
 import { importProvidersFrom } from "@angular/core";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from "@angular/forms";
 import { applicationConfig, Meta, moduleMetadata, StoryObj } from "@storybook/angular";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
@@ -16,8 +22,8 @@ import {
 
 import { PreloadedEnglishI18nModule } from "../../../../../core/tests";
 
-import { AccessSelectorComponent } from "./access-selector.component";
-import { AccessItemType } from "./access-selector.models";
+import { AccessSelectorComponent, PermissionMode } from "./access-selector.component";
+import { AccessItemType, AccessItemValue } from "./access-selector.models";
 import { actionsData, itemsFactory } from "./storybook-utils";
 import { UserTypePipe } from "./user-type.pipe";
 
@@ -52,7 +58,8 @@ export default {
 } as Meta;
 
 // TODO: This is a workaround since this story does weird things.
-type Story = StoryObj<any>;
+type FormObj = { formObj: FormGroup<{ formItems: FormControl<AccessItemValue[]> }> };
+type Story = StoryObj<AccessSelectorComponent & FormObj>;
 const fb = new FormBuilder();
 
 const ReactiveFormAccessSelectorRender = (args: any) => ({
@@ -83,8 +90,8 @@ const sampleGroups = itemsFactory(6, AccessItemType.Group);
 
 export const ReactiveForm: Story = {
   args: {
-    formObj: fb.group({ formItems: [[{ id: "1g" }]] }),
-    permissionMode: "edit",
+    formObj: fb.group({ formItems: [[{ id: "1g", type: AccessItemType.Group }]] }),
+    permissionMode: PermissionMode.Edit,
     showMemberRoles: false,
     columnHeader: "Groups/Members",
     selectorLabelText: "Select groups and members",

@@ -16,13 +16,12 @@ import {
 
 import { PreloadedEnglishI18nModule } from "../../../../../core/tests";
 
-import { AccessSelectorComponent } from "./access-selector.component";
-import { AccessItemType } from "./access-selector.models";
+import { AccessSelectorComponent, PermissionMode } from "./access-selector.component";
+import { AccessItemType, AccessItemValue } from "./access-selector.models";
 import { actionsData, itemsFactory } from "./storybook-utils";
 import { UserTypePipe } from "./user-type.pipe";
 
-// TODO: This is a workaround since this story does weird things.
-type Story = StoryObj<any>;
+type Story = StoryObj<AccessSelectorComponent & { initialValue: AccessItemValue[] }>;
 
 export default {
   title: "Web/Organizations/Access Selector/Dialog",
@@ -98,7 +97,7 @@ const dialogAccessItems = itemsFactory(10, AccessItemType.Collection);
 
 export const Dialog: Story = {
   args: {
-    permissionMode: "edit",
+    permissionMode: PermissionMode.Edit,
     showMemberRoles: false,
     showGroupColumn: true,
     columnHeader: "Collection",

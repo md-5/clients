@@ -53,7 +53,7 @@ export default {
   argTypes: {
     formObj: { table: { disable: true } },
   },
-} as Meta;
+} as Meta<typeof AccessSelectorComponent>;
 
 type Story = StoryObj<AccessSelectorComponent & { initialValue: AccessItemValue[] }>;
 
